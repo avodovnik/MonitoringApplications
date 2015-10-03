@@ -1,0 +1,5 @@
+{
+  "ApplicationInsights": {
+    "InstrumentationKey": "set this to the right value, e.g. by using Secrets"
+  }
+}
