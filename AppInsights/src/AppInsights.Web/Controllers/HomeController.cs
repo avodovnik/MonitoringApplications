@@ -11,6 +11,12 @@ namespace AppInsights.Web.Controllers
 {
     public class HomeController : Controller
     {
+        TelemetryClient _tc;
+        public HomeController(TelemetryClient telemetryClient)
+        {
+            _tc = telemetryClient;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -27,8 +33,8 @@ namespace AppInsights.Web.Controllers
         {
             ViewData["Message"] = "Your contact page.";
 
-            var tc = new TelemetryClient();
-            tc.TrackEvent("ContactInitiated", new Dictionary<string, string>()
+           
+            _tc.TrackEvent("ContactInitiated", new Dictionary<string, string>()
             {
                 { "Name", "Test" },
                 { "PricingPlan", "A" }
@@ -39,14 +45,16 @@ namespace AppInsights.Web.Controllers
 
         public IActionResult GenerateEvents(int n = 100)
         {
-            var tc = new TelemetryClient();
-
+            
             for (int i = 0; i < n; i++)
             {
-                tc.TrackEvent("ActionPerformed");
+                _tc.TrackEvent("ActionPerformed", new Dictionary<string, string>()
+                {
+                    { "Type", i.ToString() }
+                });
             }
 
-            tc.Flush();
+            _tc.Flush();
 
             return RedirectToAction("Index");
         }
